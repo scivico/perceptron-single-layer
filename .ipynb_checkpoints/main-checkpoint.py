@@ -15,7 +15,8 @@ from ploting import graph
 
 
 if __name__ == '__main__':
-	epocas = 10000; #iteraciones
+
+	epacas = 10000; #iteraciones
 	eta = 0.01;	#factor de aprendizaje
 	#path dataset
 	path = "iris.data"

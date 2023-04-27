@@ -29,16 +29,16 @@ class graph:
 	    # plot class samples
 		for idx, cl in enumerate(np.unique(y)):
 			plt.scatter(x=X[y == cl, 0], y=X[y == cl, 1], alpha=0.8, c=cmap(idx), edgecolor='black', marker=markers[idx], label=cl)
-
-		plt.title("Perceptron Single layer - Decision regions")
-		plt.tight_layout()
-		plt.show()
-		plt.savefig("result.png")
+        plt.title("Perceptron Single layer - Decision regions")
+        plt.tight_layout()
+        plt.show()
+        plt.savefig("result.png")
   
 	def plotting_errors(self,model):
 
 		plt.plot(range(1, len(model.errors_) + 1), model.errors_, marker = 's');
 		plt.xlabel("Numero de epocas")
 		plt.ylabel("Numero de actualizaciones");
+
 		plt.tight_layout()
 		plt.show()
