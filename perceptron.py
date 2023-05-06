@@ -11,7 +11,7 @@ class perceptron:
     
     # function for training the perceptron
     def train(self, data, labels, verbose = False):
-        self.weights_ =2 * np.random.rand(data.shape[1]) - 0.5 # initialize tetha vector
+        self.weights_ = 2 * np.random.rand(data.shape[1]) - 0.5 # initialize tetha vector
         self.errors_ = []
         self.accerts_ = []
         
@@ -36,8 +36,8 @@ class perceptron:
                 if verbose:
                     print("training epoc: ", _, " train accertion-rate : ", accerts/len(labels)," weights: ", self.weights_)
             
-            # test_accerts = self.test(data, labels)
-            # print("Test accertion-rate: ", test_accerts)
+        #test_accerts = self.test(data, labels)
+        #print("Test accertion-rate: ", test_accerts)
         
         return self
 
@@ -55,5 +55,48 @@ class perceptron:
         accerts = 0
         for xi, target in zip(data,labels):
             accerts += 0 if self.predict(xi) != target else 1
-        print("Accertion-rate : ", accerts/len(labels))
+        #print("Accertion-rate : ", accerts/len(labels))
         return accerts/len(labels)
+    
+    # n-fold cross validation training
+    def n_fold_cross_validation(self, data, labels, n = 5, verbose = False):
+        # print("N-fold cross validation: ", n, " folds")
+        data_folds = np.array_split(data, n)
+        labels_folds = np.array_split(labels, n)
+        accerts_rates = []
+        for i in range(n):
+            if verbose:
+                print("Validation fold: ", i)
+            # get test data
+            x_test = data_folds[i]
+            y_test = labels_folds[i]
+            # get train data
+            x_train = np.concatenate(data_folds[:i] + data_folds[i+1:])
+            y_train = np.concatenate(labels_folds[:i] + labels_folds[i+1:])
+            # train model
+            self.train(x_train, y_train, verbose)
+            # test model
+            accerts_rates.append(self.test(x_test, y_test))
+        return sum(accerts_rates)/n
+        
+
+    def leave_one_out_cross_validation(self, data, labels, verbose = False):
+        # print("Leave-one-out cross validation")
+        n = len(data)
+        accerts_rates = []
+        for i in range(n):
+            if verbose:
+                print("Validation fold: ", i)
+            # get test data
+            x_test = data[i].reshape(1,-1)
+            y_test = labels[i].reshape(1,-1)
+            # get train data
+            x_train = np.delete(data, i, 0)
+            y_train = np.delete(labels, i, 0)
+            # train model
+            self.train(x_train, y_train, verbose = False)
+            # test model
+            accerts_rates.append(self.test(x_test, y_test))
+        return sum(accerts_rates)/n
+
+    
